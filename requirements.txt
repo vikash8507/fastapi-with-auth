@@ -1,0 +1,6 @@
+fastapi==0.103.1
+uvicorn[standard]==0.23.2
+sqlalchemy==2.0.21
+passlib[bcrypt]
+pydantic[email]
+python-jose[cryptography]
