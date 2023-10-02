@@ -23,5 +23,5 @@ def read_root():
 def show_uploaded_file(directory: str, file: str):
     try:
         return FileResponse(f"{directory}/{file}")
-    except:
+    except Exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not found")

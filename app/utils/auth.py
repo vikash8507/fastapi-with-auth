@@ -3,14 +3,10 @@ from typing import Union, Any, Optional
 from jose import jwt
 from sqlalchemy.orm import Session
 
-
-from typing import Union, Any
-from datetime import datetime
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
 from fastapi.security.http import HTTPAuthorizationCredentials
 
-from jose import jwt
 from pydantic import ValidationError
 from app.auth.schema import RefreshTokenSchema, TokenPayload, VerificationTokenPayload
 from app.database import get_db
