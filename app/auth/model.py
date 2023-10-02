@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -16,3 +17,5 @@ class User(Base):
     active = Column(Boolean, default=False)
     created_at = Column(DateTime, nullable=True)
     updated_at = Column(DateTime, nullable=True)
+
+    blogs = relationship("Blog", back_populates="owner")

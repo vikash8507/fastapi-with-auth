@@ -12,8 +12,7 @@ class BlogBase(BaseModel):
     )
 
 class CreateBlog(BlogBase):
-    class Config:
-        from_attributes = True
+    pass
 
 class Blog(BlogBase):
     id: int
