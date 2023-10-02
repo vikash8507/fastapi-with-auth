@@ -9,6 +9,7 @@ from app.database import get_db
 from app.blog.model import Blog
 from app.utils.auth import get_current_user
 from app.utils.checks import get_blog_by_id
+from app.utils.upload import upload_file
 
 router = APIRouter(
     tags=["blogs"],
@@ -25,6 +26,7 @@ def all_blogs(db: Session = Depends(get_db)):
 def create_blog(request: CreateBlogSchema, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     blog = Blog(title=request.title, description=request.description,
                 created_at=datetime.now(), owner_id=user.id)
+    blog.image = upload_file(request.image)
     db.add(blog)
     db.commit()
     db.refresh(blog)

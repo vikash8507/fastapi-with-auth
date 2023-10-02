@@ -12,10 +12,11 @@ class BlogBase(BaseModel):
     )
 
 class CreateBlog(BlogBase):
-    pass
+    image: str
 
 class Blog(BlogBase):
     id: int
+    image: str
     created_at: datetime = None
     updated_at: Optional[datetime] = None
 
