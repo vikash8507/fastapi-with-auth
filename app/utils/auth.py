@@ -15,17 +15,19 @@ from pydantic import ValidationError
 from app.auth.schema import RefreshTokenSchema, TokenPayload, VerificationTokenPayload
 from app.database import get_db
 from app.auth.model import User
+from app.config import Settings
 
+settings = Settings()
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
-ALGORITHM = "HS256"
-JWT_SECRET_KEY = "os.environ['JWT_SECRET_KEY']"
-JWT_REFRESH_SECRET_KEY = "os.environ['JWT_REFRESH_SECRET_KEY']"
-JWT_VERIFICATION_TOKEN = "os.environ['JWT_VERIFICATION_TOKEN']"
-JWT_RESET_TOKEN = "os.environ['JWT_RESET_TOKEN']"
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+REFRESH_TOKEN_EXPIRE_MINUTES = settings.REFRESH_TOKEN_EXPIRE_MINUTES
+ALGORITHM = settings.ALGORITHM
+JWT_SECRET_KEY = settings.JWT_SECRET_KEY
+JWT_REFRESH_SECRET_KEY = settings.JWT_REFRESH_SECRET_KEY
+JWT_VERIFICATION_TOKEN = settings.JWT_VERIFICATION_TOKEN
+JWT_RESET_TOKEN = settings.JWT_RESET_TOKEN
 
-reuseable_oauth = HTTPBearer(scheme_name="JWT")
+reuseable_oauth = HTTPBearer(scheme_name="JWT Bearer")
 
 
 def create_access_token(subject: Union[str, Any], expires_delta: int = None) -> str:

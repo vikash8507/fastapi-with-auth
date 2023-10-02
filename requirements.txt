@@ -5,3 +5,4 @@ passlib[bcrypt]
 pydantic[email]
 python-jose[cryptography]
 python-multipart
+pydantic_settings
