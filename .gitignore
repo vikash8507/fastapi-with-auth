@@ -2,3 +2,4 @@
 /venv
 /sql_app.db
 *.env
+/media
