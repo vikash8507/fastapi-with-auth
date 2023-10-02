@@ -11,10 +11,7 @@ from app.utils.auth import get_current_user
 from app.utils.checks import get_blog_by_id
 from app.utils.upload import upload_file
 
-router = APIRouter(
-    tags=["blogs"],
-    prefix="/blogs"
-)
+router = APIRouter(tags=["blogs"], prefix="/blogs")
 
 
 @router.get("/", response_model=List[BlogSchema], status_code=status.HTTP_200_OK)
@@ -23,9 +20,17 @@ def all_blogs(db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=BlogSchema, status_code=status.HTTP_201_CREATED)
-def create_blog(request: CreateBlogSchema, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    blog = Blog(title=request.title, description=request.description,
-                created_at=datetime.now(), owner_id=user.id)
+def create_blog(
+    request: CreateBlogSchema,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    blog = Blog(
+        title=request.title,
+        description=request.description,
+        created_at=datetime.now(),
+        owner_id=user.id,
+    )
     blog.image = upload_file(request.image)
     db.add(blog)
     db.commit()
@@ -33,8 +38,10 @@ def create_blog(request: CreateBlogSchema, db: Session = Depends(get_db), user: 
     return blog
 
 
-@router.get("/my-blogs", response_model=List[BlogSchema], status_code=status.HTTP_200_OK)
-def delete_blogs(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+@router.get(
+    "/my-blogs", response_model=List[BlogSchema], status_code=status.HTTP_200_OK
+)
+def my_blogs(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     return db.query(Blog).filter(Blog.owner_id == user.id)
 
 
@@ -45,11 +52,17 @@ def read_blog(id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/{id}", response_model=BlogSchema, status_code=status.HTTP_200_OK)
-def update_blogs(id: int, request: CreateBlogSchema, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def update_blogs(
+    id: int,
+    request: CreateBlogSchema,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
     blog = get_blog_by_id(id, db)
     if blog.owner_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail="You can not update this blog")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="You can not update this blog"
+        )
     if request.title:
         blog.title = request.title
     if request.description:
@@ -62,10 +75,13 @@ def update_blogs(id: int, request: CreateBlogSchema, db: Session = Depends(get_d
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_blogs(id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def delete_blogs(
+    id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
     blog = get_blog_by_id(id, db)
     if blog.owner_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail="You can not delete this blog")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="You can not delete this blog"
+        )
     db.delete(blog)
     db.commit()

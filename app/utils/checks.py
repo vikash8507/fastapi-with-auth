@@ -8,5 +8,6 @@ def get_blog_by_id(id: int, db: Session) -> Blog:
     blog = db.query(Blog).filter(Blog.id == id)
     if blog.first() is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="Blog not found"
+        )
     return blog.first()

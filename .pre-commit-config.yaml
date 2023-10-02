@@ -1,49 +1,35 @@
-exclude: "^docs/|/migrations/"
-default_stages: [commit]
-
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_language_version:
+    python: python3.10
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
+-   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.9.0
+    -   id: check-added-large-files
+    -   id: check-toml
+    -   id: check-yaml
+        args:
+        -   --unsafe
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v3.7.0
     hooks:
-      - id: pyupgrade
-        args: [--py310-plus]
-
-  - repo: https://github.com/psf/black
-    rev: 23.7.0
+    -   id: pyupgrade
+        args:
+        - --py3-plus
+        - --keep-runtime-typing
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.275
     hooks:
-      - id: black
-
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    -   id: ruff
+        args:
+        - --fix
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
     hooks:
-      - id: isort
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        args: ["--config=setup.cfg"]
-        additional_dependencies: [flake8-isort]
-
-  - repo: https://github.com/awslabs/git-secrets
-    rev: master
-    hooks:
-      - id: git-secrets
-
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
-    hooks:
-    -   id: detect-secrets
-
-# sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
+    -   id: black
 ci:
-  autoupdate_schedule: weekly
-  skip: []
-  submodules: false
+    autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
+    autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate

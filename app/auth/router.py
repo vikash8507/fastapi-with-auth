@@ -9,7 +9,7 @@ from app.auth.repository import (
     reset_password_repository,
     signin_repository,
     signup_repository,
-    verify_email_repository
+    verify_email_repository,
 )
 from app.auth.schema import (
     AuthUserSchema,
@@ -20,7 +20,7 @@ from app.auth.schema import (
     SignupSchema,
     TokenSchema,
     RefreshTokenSchema,
-    VerifyEmailSchema
+    VerifyEmailSchema,
 )
 from app.database import get_db
 from app.utils.auth import (
@@ -57,7 +57,9 @@ def me(user: User = Depends(get_current_user)):
     return user
 
 
-@router.post("/token/refresh", status_code=status.HTTP_200_OK, response_model=TokenSchema)
+@router.post(
+    "/token/refresh", status_code=status.HTTP_200_OK, response_model=TokenSchema
+)
 def refresh_token(request: RefreshTokenSchema, db: Session = Depends(get_db)):
     user = validate_refresh_token(request, db)
     return {
@@ -67,7 +69,11 @@ def refresh_token(request: RefreshTokenSchema, db: Session = Depends(get_db)):
 
 
 @router.post("/change-password", status_code=status.HTTP_200_OK)
-def change_password(request: ChangePasswordSchema, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def change_password(
+    request: ChangePasswordSchema,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
     change_password_repository(request, db, user)
     return {"detail": "Change password successfully!"}
 

@@ -34,9 +34,10 @@ def create_access_token(subject: Union[str, Any], expires_delta: int = None) -> 
     if expires_delta is not None:
         expires_delta = datetime.utcnow() + expires_delta
     else:
-        expires_delta = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode = {"exp": expires_delta, "sub": str(
-        subject), "token_type": "access"}
+        expires_delta = datetime.utcnow() + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+    to_encode = {"exp": expires_delta, "sub": str(subject), "token_type": "access"}
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, ALGORITHM)
     return encoded_jwt
 
@@ -45,9 +46,10 @@ def create_refresh_token(subject: Union[str, Any], expires_delta: int = None) ->
     if expires_delta is not None:
         expires_delta = datetime.utcnow() + expires_delta
     else:
-        expires_delta = datetime.utcnow() + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
-    to_encode = {"exp": expires_delta, "sub": str(
-        subject), "token_type": "refresh"}
+        expires_delta = datetime.utcnow() + timedelta(
+            minutes=REFRESH_TOKEN_EXPIRE_MINUTES
+        )
+    to_encode = {"exp": expires_delta, "sub": str(subject), "token_type": "refresh"}
     encoded_jwt = jwt.encode(to_encode, JWT_REFRESH_SECRET_KEY, ALGORITHM)
     return encoded_jwt
 
@@ -55,9 +57,7 @@ def create_refresh_token(subject: Union[str, Any], expires_delta: int = None) ->
 def get_user(token: str, db: Optional[Session] = None, check_for: str = "access"):
     SECRET_KEY = JWT_SECRET_KEY if check_for == "access" else JWT_REFRESH_SECRET_KEY
     try:
-        payload = jwt.decode(
-            token, SECRET_KEY, algorithms=[ALGORITHM]
-        )
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         token_data = TokenPayload(**payload)
 
         if datetime.fromtimestamp(token_data.exp) < datetime.now():
@@ -99,19 +99,23 @@ def get_current_user(token: HTTPAuthorizationCredentials = Depends(reuseable_oau
 def validate_refresh_token(token: RefreshTokenSchema, db: Session):
     return get_user(token.refresh_token, db, check_for="refresh")
 
-def create_verification_token(username: str, token_type: str="verification"):
-    SECRET_KEY = JWT_VERIFICATION_TOKEN if token_type == "verification" else JWT_RESET_TOKEN
+
+def create_verification_token(username: str, token_type: str = "verification"):
+    SECRET_KEY = (
+        JWT_VERIFICATION_TOKEN if token_type == "verification" else JWT_RESET_TOKEN
+    )
     expires_delta = datetime.utcnow() + timedelta(minutes=15)
     to_encode = {"exp": expires_delta, "sub": str(username)}
     token = jwt.encode(to_encode, SECRET_KEY, ALGORITHM)
     return token
 
-def verify_verification_token(token: str, token_type: str="verification"):
-    SECRET_KEY = JWT_VERIFICATION_TOKEN if token_type == "verification" else JWT_RESET_TOKEN
+
+def verify_verification_token(token: str, token_type: str = "verification"):
+    SECRET_KEY = (
+        JWT_VERIFICATION_TOKEN if token_type == "verification" else JWT_RESET_TOKEN
+    )
     try:
-        payload = jwt.decode(
-            token, SECRET_KEY, algorithms=[ALGORITHM]
-        )
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         token_data = VerificationTokenPayload(**payload)
 
         if datetime.fromtimestamp(token_data.exp) < datetime.now():

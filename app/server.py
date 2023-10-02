@@ -13,13 +13,15 @@ app = FastAPI()
 app.include_router(auth_router)
 app.include_router(blog_router)
 
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
+
 @app.get("/{directory}/{file}", status_code=status.HTTP_200_OK)
 def show_uploaded_file(directory: str, file: str):
     try:
-        return  FileResponse(f"{directory}/{file}")
+        return FileResponse(f"{directory}/{file}")
     except:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not found")

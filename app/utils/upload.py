@@ -1,7 +1,8 @@
 import uuid
 import base64
 
-def upload_file(base64_data, base_dir = "media"):
+
+def upload_file(base64_data, base_dir="media"):
     eliminator, data = base64_data.split("base64, ")
     ext = eliminator.split("/")[1].replace(";", "")
     file_name = uuid.uuid4()
