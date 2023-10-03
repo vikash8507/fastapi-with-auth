@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import FastAPI, status, HTTPException, Request
 from fastapi.responses import FileResponse
 
 from app.blog.router import router as blog_router
@@ -14,15 +14,25 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redocs",
     description="Api using FastAPI",
+    swagger_ui_parameters={"syntaxHighlight.theme": "obsidian"},
     servers=[
-        {"url": "dev.api.fastapi.com"},
-        {"url": "qa.api.fastapi.com"},
-        {"url": "stage.api.fastapi.com"},
-        {"url": "sandbox.api.fastapi.com"},
-        {"url": "runtime.api.fastapi.com"},
-        {"url": "api.fastapi.com"},
+        {"url": "http://localhost:3000"},
+        {"url": "https://dev.api.fastapi.com"},
+        {"url": "https://qa.api.fastapi.com"},
+        {"url": "https://stage.api.fastapi.com"},
+        {"url": "https://sandbox.api.fastapi.com"},
+        {"url": "https://runtime.api.fastapi.com"},
+        {"url": "https://api.fastapi.com"},
     ],
 )
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    print("Middleware start...")
+    response = await call_next(request)
+    print("Middleware end...")
+    return response
+
 
 app.include_router(auth_router)
 app.include_router(blog_router)
